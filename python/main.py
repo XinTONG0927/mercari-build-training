@@ -23,7 +23,7 @@ app.add_middleware(
 def root():
     return {"message": "Hello, world!"}
 
-
+  
 @app.post("/items")
 def add_item(name: str = Form(...)):
     logger.info(f"Receive item: {name}")
@@ -41,5 +41,6 @@ async def get_image(image_name):
     if not image.exists():
         logger.debug(f"Image not found: {image}")
         image = images / "default.jpg"
+
 
     return FileResponse(image)
