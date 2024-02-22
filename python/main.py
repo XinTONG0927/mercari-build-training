@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import json
 import hashlib
-
+from DB import Get_all,Insert_item,SearchByKw, Get_all_ex
 app = FastAPI()
 logger = logging.getLogger("uvicorn")
 logger.level = logging.INFO
@@ -29,9 +29,8 @@ def root():
 
 @app.get("/items")
 def get_items():
-    with open('items.json','r') as f:
-        data = json.load(f)
-    return data
+    # return Get_all("items")
+    return Get_all_ex()
 
 @app.get("/items/{item_id}")
 def get_itemsById(item_id: int):
@@ -39,23 +38,28 @@ def get_itemsById(item_id: int):
         data = json.load(f)
     if item_id >= len(data["items"]):
         raise HTTPException(status_code=404, detail="Array out of bound")
+    
     return data[item_id]
 
+#4-2
+@app.get("/search")
+def search_item(keyword: str):
+    return SearchByKw("items", keyword)
 
 @app.post("/items")
 async def add_item(name: str = Form(...), category: str = Form(...), file: UploadFile = File(...) ):
     logger.info(f"Receive item: {name}")
     read = await file.read()
     hash = hashlib.sha256(read).hexdigest()
-    #save image
+
+    #Save image
     with open(os.path.join("images",f"{hash}.jpg"),'wb') as f:
         f.write(read)
     dict = {"name":name, "category":category, "image_filename": f"{hash}.jpg"}
-    with open('items.json','r') as f_r:
-        data = json.load(f_r)
-    data["items"].append(dict)
-    with open('items.json','w') as f_w:
-        json.dump(data, f_w)
+
+    #Insert into database
+    Insert_item("items", dict)
+
     return {"message": f"item received: {name}"}
 
 @app.get("/image/{image_name}")
