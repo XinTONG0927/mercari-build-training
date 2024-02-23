@@ -26,6 +26,7 @@ app.add_middleware(
 def root():
     return {"message": "Hello, world!"}
 
+
 @app.get("/items")
 def get_items():
     # return Get_all("items")
@@ -45,8 +46,9 @@ def get_itemsById(item_id: int):
 #STEP4-2
 @app.get("/search")
 def search_item(keyword: str):
-
+  
     return SearchByKw("items", keyword)
+
 
 @app.post("/items")
 async def add_item(name: str = Form(...), category: str = Form(...), file: UploadFile = File(...) ):
