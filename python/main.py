@@ -29,8 +29,10 @@ def root():
 
 @app.get("/items")
 def get_items():
-    # return Get_all("items")
-    return Get_all_ex()
+
+    return Get_all("items")
+    # #STEP4-3
+    # return Get_all_ex()
 
 @app.get("/items/{item_id}")
 def get_itemsById(item_id: int):
@@ -41,10 +43,12 @@ def get_itemsById(item_id: int):
     
     return data[item_id]
 
-#4-2
+#STEP4-2
 @app.get("/search")
 def search_item(keyword: str):
+  
     return SearchByKw("items", keyword)
+
 
 @app.post("/items")
 async def add_item(name: str = Form(...), category: str = Form(...), file: UploadFile = File(...) ):

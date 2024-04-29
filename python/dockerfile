@@ -1,8 +1,28 @@
-FROM alpine
+ARG PYTHON_VERSION=3.9
+FROM python:${PYTHON_VERSION}-slim as base
 
-RUN addgroup -S mercari && adduser -S trainee -G mercari
-# RUN chown -R trainee:mercari /path/to/db
+USER root
+
+RUN addgroup --system mercari
+RUN adduser --system --ingroup mercari trainee
+RUN mkdir /home/trainee
+RUN chown -R trainee:mercari  /home/trainee
 
 USER trainee
 
-CMD ["python", "-V"]
+ENV HOME /home/trainee
+
+WORKDIR /home/trainee
+
+COPY requirements.txt /home/trainee/requirements.txt
+
+RUN pip install --upgrade pip
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . /home/trainee/
+
+# Expose the port that the application listens on.
+EXPOSE 9000
+
+# Run the application.
+CMD ["python","-m", "uvicorn", "main:app", "--reload", "--host", "0.0.0.0", "--port", "9000"]

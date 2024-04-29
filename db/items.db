@@ -1,1 +1,6 @@
+<<<<<<< HEAD
+=======
+CREATE TABLE sqlite_sequence(name,seq);
+CREATE TABLE categories(id integer primary key autoincrement, name text);
+>>>>>>> step6
 CREATE TABLE items(id integer primary key autoincrement, name text, category text, image_name text);
