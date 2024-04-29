@@ -29,10 +29,10 @@ def root():
 
 @app.get("/items")
 def get_items():
-    # return Get_all("items")
+    return Get_all("items")
 
-    #STEP4-3
-    return Get_all_ex()
+    # #STEP4-3
+    # return Get_all_ex()
 
 @app.get("/items/{item_id}")
 def get_itemsById(item_id: int):

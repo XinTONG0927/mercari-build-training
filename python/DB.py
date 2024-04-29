@@ -54,6 +54,8 @@ def Insert_item(table_name, item: [tuple,dict]):
         cursor = con.cursor()
         cursor.execute(f"Insert into {table_name} (id, name, category, image_name) "
                        f"values (NULL, ?, ?, ?)", item)
+        cursor.execute(f"Insert into {table_name} (id, name, category, image_name) "
+                       f"values (NULL, ?, ?, ?)", item)
         con.commit()
     except Exception as e:
         print(e)
