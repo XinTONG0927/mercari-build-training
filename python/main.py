@@ -30,9 +30,9 @@ def root():
 @app.get("/items")
 def get_items():
 
-    return Get_all("items")
+    # return Get_all("items")
     # #STEP4-3
-    # return Get_all_ex()
+    return Get_all_ex()
 
 @app.get("/items/{item_id}")
 def get_itemsById(item_id: int):
@@ -62,9 +62,7 @@ async def add_item(name: str = Form(...), category: str = Form(...), file: Uploa
     dict = {"name":name, "category":category, "image_filename": f"{hash}.jpg"}
 
     #Insert into database
-    Insert_item("items", dict)
-
-    return {"message": f"item received: {name}"}
+    return Insert_item("items", dict)
 
 @app.get("/image/{image_name}")
 async def get_image(image_name):
