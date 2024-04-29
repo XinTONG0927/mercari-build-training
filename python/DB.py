@@ -46,19 +46,25 @@ def Get_all_ex():
         con.close()
 
 #insert/item
-def Insert_item(table_name, item: [tuple,dict]):
-    if type(item) == dict:
-        item = tuple(item.values())
+def Insert_item(table_name, item: [dict]):
+    assert len(item) == 3
+
     try:
         con = sql_connection()
         cursor = con.cursor()
-        cursor.execute(f"Insert into {table_name} (id, name, category, image_name) "
-                       f"values (NULL, ?, ?, ?)", item)
+        cursor.execute(f"Insert into {table_name} (id, name, category_id, image_name) "
+                       f"values (NULL, ?, NULL, ?)", (item['name'], item['image_filename']))
+
+        cursor.execute(f"Update {table_name} set category_id = (select id from categories where name = \"{item['category']}\")"
+                       f"where id = {cursor.lastrowid}")
         con.commit()
+        return {"message": f"item received: {item['name']}"}
     except Exception as e:
         print(e)
+        return {"message": f"{e}"}
     finally:
         con.close()
+
 
 def SearchByKw(table_name, kw: str):
     try:
@@ -74,7 +80,8 @@ def SearchByKw(table_name, kw: str):
         con.close()
 
 if __name__ == '__main__':
-    pass
+    item_dict = {"name":"name", "category":"fruits", "image_filename": ".jpg"}
+    Insert_item("items", item_dict)
 
 
 
